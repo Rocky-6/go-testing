@@ -33,7 +33,7 @@ func TestFetchAllArticles(t *testing.T) {
 	}
 }
 
-func TestPostMethod(t *testing.T) {
+func TestIndexHandler(t *testing.T) {
 	blog := New()
 
 	http.HandleFunc("/blog", blog.indexHandler)
@@ -41,6 +41,12 @@ func TestPostMethod(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/blog", strings.NewReader(`{"title": "xxx", "body": "xxxx"}`))
 	blog.indexHandler(w, req)
 
-	resp := w.Result()
-	assert.Equal(t, resp.StatusCode, 200)
+	assert.Equal(t, w.Code, 200)
+
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("GET", "/blog", nil)
+	blog.indexHandler(w, req)
+
+	assert.Equal(t, w.Code, 200)
+	assert.Equal(t, w.Body.String(), "{\"articles\":[{\"title\":\"xxx\",\"body\":\"xxxx\"}]}\n")
 }

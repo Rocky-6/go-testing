@@ -1,6 +1,13 @@
 package main
 
-import "testing"
+import (
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestSaveArticle(t *testing.T) {
 
@@ -24,4 +31,16 @@ func TestFetchAllArticles(t *testing.T) {
 	if len(articles) == 0 {
 		t.Errorf("Fetch All fails")
 	}
+}
+
+func TestPostMethod(t *testing.T) {
+	blog := New()
+
+	http.HandleFunc("/blog", blog.indexHandler)
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/blog", strings.NewReader(`{"title": "xxx", "body": "xxx"}`))
+	blog.indexHandler(w, req)
+
+	resp := w.Result()
+	assert.Equal(t, resp.StatusCode, 200)
 }

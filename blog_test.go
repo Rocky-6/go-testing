@@ -41,6 +41,21 @@ func TestPostMethod(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/blog", strings.NewReader(`{"title": "xxx", "body": "xxxx"}`))
 	blog.indexHandler(w, req)
 
-	resp := w.Result()
-	assert.Equal(t, resp.StatusCode, 200)
+	assert.Equal(t, w.Code, 200)
+}
+
+func TestGetMethod(t *testing.T) {
+	blog := New()
+
+	blog.SaveArticle(Article{
+		Title: "xxx",
+		Body:  "xxxx",
+	})
+	http.HandleFunc("/blog", blog.indexHandler)
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/blog", nil)
+	blog.indexHandler(w, req)
+
+	assert.Equal(t, w.Code, 200)
+	assert.Equal(t, w.Body.String(), `{"articles":[{"title":"xxx","body":"xxxx"}]}`)
 }

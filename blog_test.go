@@ -38,7 +38,7 @@ func TestPostMethod(t *testing.T) {
 
 	http.HandleFunc("/blog", blog.indexHandler)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/blog", strings.NewReader(`{"title": "xxx", "body": "xxx"}`))
+	req, _ := http.NewRequest("POST", "/blog", strings.NewReader(`{"title": "xxx", "body": "xxxx"}`))
 	blog.indexHandler(w, req)
 
 	resp := w.Result()

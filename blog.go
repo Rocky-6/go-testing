@@ -6,7 +6,7 @@ type Article struct {
 }
 
 type Blog struct {
-	Articles []Article
+	Articles []Article `json:"articles"`
 }
 
 func New() *Blog {
